@@ -2,7 +2,6 @@
 #define JOLTEON_H
 
 #include <Arduino.h>
-#include <esp32_smartdisplay.h>
 
 extern volatile bool sram_modified;
 extern uint8_t btn_directions;
@@ -10,16 +9,6 @@ extern uint8_t btn_faces;
 
 typedef uint16_t fbuffer_t;
 extern uint16_t palette[];
-
-// Game Boy button mapping
-#define BTN_RIGHT  0x01
-#define BTN_LEFT   0x02
-#define BTN_UP     0x04
-#define BTN_DOWN   0x08
-#define BTN_A      0x01
-#define BTN_B      0x02
-#define BTN_SELECT 0x04
-#define BTN_START  0x08
 
 void jolteon_update(void);
 void jolteon_init(void);
