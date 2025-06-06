@@ -168,3 +168,230 @@ This project follows the same license terms as the original Espeon emulator. Ple
 ---
 
 **Disclaimer**: This emulator is for educational purposes. Ensure you own the rights to any ROM files you use with this emulator.
+
+# Jolteon - Game Boy Emulator for ESP32
+
+Jolteon is a Game Boy emulator specifically designed for the ESP32-2432S028R "Cheap Yellow Display" board. This project is a comprehensive port of the original [Espeon emulator](https://github.com/Ryuzaki-MrL/Espeon), completely redesigned for the affordable CYD development board using modern PlatformIO development practices.
+
+## About Jolteon
+
+This emulator leverages the ESP32's dual-core architecture to deliver an authentic Game Boy gaming experience on a 2.8" touchscreen display. The project implements a full-featured emulation platform with advanced touch controls, comprehensive file management, and hardware integration optimized for the ESP32-2432S028R board.
+
+### Hardware Requirements
+
+**Target Platform:**
+* ESP32-2432S028R "Cheap Yellow Display" board
+* 240x320 ILI9341 TFT display (integrated)
+* XPT2046 touch controller (integrated)
+* MicroSD card slot (integrated)
+* RGB LED (integrated)
+* Light sensor (LDR, integrated)
+* Speaker connection
+* USB-C programming interface
+
+### Planned Features
+
+#### Core Emulation
+* **Complete Game Boy CPU**: Full LR35902 instruction set emulation
+* **Memory Bank Controllers**: Support for MBC1, MBC2, MBC3, and MBC5
+* **Audio Processing Unit**: Four-channel Game Boy sound emulation
+* **Save State System**: Multiple save slots with thumbnails and metadata
+* **Battery SRAM**: Persistent save game support
+
+#### User Interface
+* **Touch-Based Controls**: Customizable virtual D-pad and buttons
+* **Advanced Menu System**: ROM browser with search and organization
+* **Theme Support**: Customizable UI elements and color schemes
+* **Multi-Language Support**: Internationalization framework
+
+#### Hardware Integration
+* **Bluetooth Controllers**: External gamepad support with pairing management
+* **RGB LED Integration**: System status and game event feedback
+* **Automatic Brightness**: Light sensor-based display adjustment
+* **Power Management**: Intelligent sleep modes and battery optimization
+* **SD Card Management**: Comprehensive file organization and ROM library
+
+#### Advanced Features
+* **Performance Optimization**: Dual-core processing with real-time monitoring
+* **Diagnostic Tools**: System information and debugging capabilities
+* **OTA Updates**: Over-the-air firmware update support
+* **Configuration Backup**: Settings persistence and restore functionality
+
+## Development Roadmap
+
+This project follows a structured development approach with clearly defined phases:
+
+1. **Foundation Setup**: PlatformIO configuration and core emulation porting
+2. **User Interface**: Touch system and menu implementation
+3. **Gaming Features**: Save states and file management
+4. **Hardware Integration**: Bluetooth, sensors, and peripheral support
+5. **Audio Implementation**: Complete Game Boy sound emulation
+6. **System Optimization**: Power management and performance tuning
+7. **Documentation**: Comprehensive guides and community framework
+
+## Getting Started with Development
+
+### Prerequisites
+
+* **PlatformIO Core** or **PlatformIO IDE** (VS Code extension)
+* **ESP32-2432S028R** development board
+* **Git** for version control
+
+### Development Setup
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/your-username/jolteon
+   cd jolteon
+   ```
+
+2. **PlatformIO initialization**:
+   ```bash
+   pio project init
+   ```
+
+3. **Install dependencies**:
+   ```bash
+   pio lib install
+   ```
+
+4. **Build the project**:
+   ```bash
+   pio run
+   ```
+
+5. **Upload to board**:
+   ```bash
+   pio run --target upload
+   ```
+
+### Project Configuration
+
+The `platformio.ini` file contains board-specific configurations:
+
+```ini
+[env:esp32-2432s028r]
+platform = espressif32
+board = esp32dev
+framework = arduino
+board_build.partitions = huge_app.csv
+build_flags = 
+    -DCORE_DEBUG_LEVEL=3
+    -DUSER_SETUP_LOADED=1
+    -DILI9341_DRIVER=1
+    -DTFT_WIDTH=240
+    -DTFT_HEIGHT=320
+monitor_speed = 115200
+lib_deps = 
+    bodmer/TFT_eSPI
+    paulstoffregen/XPT2046_Touchscreen
+    arduino-libraries/SD
+```
+
+## Project Structure
+
+```
+jolteon/
+├── src/
+│   ├── main.cpp                 # Application entry point
+│   ├── emulation/
+│   │   ├── cpu.cpp             # Game Boy CPU core
+│   │   ├── memory.cpp          # Memory management
+│   │   ├── ppu.cpp             # Picture processing unit
+│   │   ├── apu.cpp             # Audio processing unit
+│   │   └── cartridge.cpp       # ROM and MBC handling
+│   ├── hardware/
+│   │   ├── display.cpp         # TFT display interface
+│   │   ├── touch.cpp           # Touch input handling
+│   │   ├── audio.cpp           # I2S audio output
+│   │   ├── storage.cpp         # SD card management
+│   │   └── bluetooth.cpp       # Controller connectivity
+│   ├── ui/
+│   │   ├── menu.cpp            # Menu system
+│   │   ├── controls.cpp        # Virtual controls
+│   │   ├── themes.cpp          # UI theming
+│   │   └── settings.cpp        # Configuration interface
+│   └── utils/
+│       ├── config.cpp          # Configuration management
+│       ├── power.cpp           # Power management
+│       └── diagnostics.cpp     # System monitoring
+├── include/
+│   ├── jolteon.h               # Main header
+│   ├── emulation/              # Emulation headers
+│   ├── hardware/               # Hardware abstraction
+│   ├── ui/                     # User interface
+│   └── utils/                  # Utility headers
+├── data/                       # SPIFFS data files
+├── test/                       # Unit tests
+├── platformio.ini              # PlatformIO configuration
+└── README.md
+```
+
+## Development Guidelines
+
+### Code Organization
+- **Modular Architecture**: Separate concerns with clear interfaces
+- **Hardware Abstraction**: Abstract hardware-specific functionality
+- **Error Handling**: Comprehensive error checking and recovery
+- **Performance Focus**: Optimize for dual-core ESP32 architecture
+
+### Testing Strategy
+- **Unit Testing**: Individual component validation
+- **Integration Testing**: Hardware and software interaction testing
+- **Compatibility Testing**: ROM compatibility validation
+- **Performance Testing**: Real-time performance monitoring
+
+### Documentation Standards
+- **Code Documentation**: Comprehensive inline documentation
+- **API Documentation**: Clear interface specifications
+- **User Guides**: Step-by-step usage instructions
+- **Development Guides**: Contribution and extension guidelines
+
+## Contributing
+
+Jolteon is designed as a community-driven project. Contributions are welcome in all areas:
+
+### Priority Areas
+- **Audio Emulation**: Game Boy APU implementation
+- **Performance Optimization**: Memory and CPU efficiency improvements
+- **Hardware Features**: Enhanced peripheral integration
+- **User Experience**: Interface and usability enhancements
+- **Compatibility**: ROM support and accuracy improvements
+
+### Development Process
+1. **Fork the repository** and create a feature branch
+2. **Follow coding standards** and documentation requirements
+3. **Test thoroughly** on actual hardware
+4. **Submit pull requests** with detailed descriptions
+5. **Participate in code review** process
+
+## Technical Specifications
+
+### Performance Targets
+- **Emulation Speed**: 100%+ original Game Boy performance
+- **Display Refresh**: 60 FPS consistent frame rate
+- **Audio Latency**: <50ms audio processing delay
+- **Touch Response**: <100ms input to action latency
+- **Battery Life**: 4+ hours continuous gaming
+
+### Memory Management
+- **SRAM Utilization**: Optimized for 520KB constraint
+- **Flash Storage**: Efficient 4MB flash usage
+- **Dynamic Allocation**: Minimal heap fragmentation
+- **Cache Strategy**: Intelligent ROM and asset caching
+
+## License
+
+This project follows the same license terms as the original Espeon emulator. The code is provided for educational and development purposes.
+
+## Acknowledgments
+
+- **Original Espeon**: Foundation codebase and emulation core
+- **Game Boy Development Community**: Technical documentation and research
+- **ESP32 Community**: Hardware abstraction and optimization techniques
+- **PlatformIO Team**: Advanced embedded development framework
+
+---
+
+**Note**: This project is under active development. Features and specifications may change as development progresses. Check the project roadmap for current status and upcoming milestones.
+
