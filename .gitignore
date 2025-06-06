@@ -38,4 +38,5 @@ roms
 gbrom.h
 gbborder.h
 gbbios.h
-espeon*.bin
+jolteon*.bin
+.pio
