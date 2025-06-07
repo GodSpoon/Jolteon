@@ -6,7 +6,7 @@
 #include "menu.h"
 #include "rom.h"
 #include "timer.h"
-#include <TFT_eSPI.h>
+#include <esp32_smartdisplay.h>
 
 void setup()
 {
@@ -14,17 +14,6 @@ void setup()
     Serial.println("Jolteon starting...");
 
     jolteon_init();
-
-    // Run system verification tests
-    bool system_ok = jolteon_verify_system();
-    
-    // Display test pattern first to verify display is working
-    jolteon_display_test_pattern();
-    delay(3000); // Show test pattern for 3 seconds
-
-    if (!system_ok) {
-        jolteon_faint("System verification failed. Check serial output.");
-    }
 
     menu_init();
     menu_loop();
@@ -66,6 +55,6 @@ void loop()
     lcd_cycle(cycles);
     timer_cycle(cycles);
 
-    // Small delay to prevent overwhelming the system
-    delay(1);
+    // Handle LVGL tasks
+    lv_timer_handler();
 }

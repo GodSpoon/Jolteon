@@ -2,8 +2,9 @@
 #define JOLTEON_H
 
 #include <Arduino.h>
-#include <esp32_smartdisplay.h>
+#include <TFT_eSPI.h>
 
+extern TFT_eSPI tft;
 extern volatile bool sram_modified;
 extern uint8_t btn_directions;
 extern uint8_t btn_faces;
