@@ -48,7 +48,7 @@ void draw_menu()
     lv_obj_t* title = lv_label_create(main_screen);
     lv_label_set_text(title, "Jolteon v1.0");
     lv_obj_set_style_text_color(title, lv_color_white(), 0);
-    lv_obj_set_style_text_font(title, &lv_font_montserrat_20, 0);
+    lv_obj_set_style_text_font(title, &lv_font_montserrat_14, 0);
     lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 10);
 
     // Create list
@@ -69,13 +69,13 @@ void draw_menu()
         lv_obj_t* btn = lv_list_add_btn(list, nullptr, filename.c_str());
 
         // Store filename in user data
-        char* stored_name = (char*)lv_mem_alloc(filename.length() + 1);
+        char* stored_name = (char*)lv_malloc(filename.length() + 1);
         strcpy(stored_name, filename.c_str());
         lv_obj_set_user_data(btn, stored_name);
 
         lv_obj_add_event_cb(btn, [](lv_event_t* e) {
             if (lv_event_get_code(e) == LV_EVENT_CLICKED) {
-                lv_obj_t* btn = lv_event_get_target(e);
+                lv_obj_t* btn = (lv_obj_t*)lv_event_get_target(e);
                 char* filename = (char*)lv_obj_get_user_data(btn);
                 if (filename) {
                     rompath = String("/") + filename;

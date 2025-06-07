@@ -19,6 +19,7 @@ void jolteon_end_frame(void);
 void jolteon_clear_screen(uint16_t col);
 void jolteon_set_palette(const uint32_t* col);
 void jolteon_render_border(const uint8_t* img, uint32_t size);
+void jolteon_display_test_pattern(void);
 void jolteon_save_sram(uint8_t* ram, uint32_t size);
 void jolteon_load_sram(uint8_t* ram, uint32_t size);
 const uint8_t* jolteon_load_rom(const char* path);

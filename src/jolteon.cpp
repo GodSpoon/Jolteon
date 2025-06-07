@@ -2,6 +2,7 @@
 #include "cpu.h"
 #include "gbfiles.h"
 #include "lcd.h"
+#include "mbc.h"
 #include "mem.h"
 #include "menu.h"
 #include "rom.h"
@@ -40,6 +41,82 @@ void jolteon_render_border(const uint8_t* img, uint32_t size)
     }
 }
 
+void jolteon_display_test_pattern()
+{
+    // Create a test pattern to verify display is working
+    if (!canvas_buf) return;
+    
+    // Fill with color bars
+    for (int y = 0; y < GAMEBOY_HEIGHT; y++) {
+        for (int x = 0; x < GAMEBOY_WIDTH; x++) {
+            uint16_t color;
+            int segment = (x * 4) / GAMEBOY_WIDTH;
+            
+            switch (segment) {
+                case 0: color = 0xF800; break; // Red
+                case 1: color = 0x07E0; break; // Green  
+                case 2: color = 0x001F; break; // Blue
+                default: color = 0xFFFF; break; // White
+            }
+            
+            canvas_buf[y * GAMEBOY_WIDTH + x] = lv_color_hex(color);
+        }
+    }
+    
+    if (canvas) {
+        lv_canvas_set_buffer(canvas, canvas_buf, GAMEBOY_WIDTH, GAMEBOY_HEIGHT, LV_COLOR_FORMAT_RGB565);
+    }
+    
+    Serial.println("Display test pattern rendered");
+}
+
+bool jolteon_verify_system()
+{
+    Serial.println("=== Jolteon System Verification ===");
+    bool all_ok = true;
+    
+    // Test 1: Display system
+    Serial.print("Display canvas: ");
+    if (canvas && canvas_buf) {
+        Serial.println("OK");
+    } else {
+        Serial.println("FAILED");
+        all_ok = false;
+    }
+    
+    // Test 2: Framebuffer
+    Serial.print("Framebuffer: ");
+    if (pixels) {
+        Serial.println("OK");
+    } else {
+        Serial.println("FAILED");
+        all_ok = false;
+    }
+    
+    // Test 3: SD card
+    Serial.print("SD card: ");
+    if (SD.begin()) {
+        Serial.println("OK");
+    } else {
+        Serial.println("FAILED - Insert SD card or check connections");
+        all_ok = false;
+    }
+    
+    // Test 4: LVGL
+    Serial.print("LVGL: ");
+    if (lv_is_initialized()) {
+        Serial.println("OK");
+    } else {
+        Serial.println("FAILED");
+        all_ok = false;
+    }
+    
+    Serial.printf("Overall system status: %s\n", all_ok ? "READY" : "ISSUES DETECTED");
+    Serial.println("=====================================");
+    
+    return all_ok;
+}
+
 static void jolteon_request_sd_write()
 {
     spi_lock = 1;
@@ -58,10 +135,10 @@ void jolteon_init(void)
 
     // Create canvas for Game Boy display
     canvas = lv_canvas_create(lv_scr_act());
-    canvas_buf = (lv_color_t*)lv_mem_alloc(GAMEBOY_WIDTH * GAMEBOY_HEIGHT * sizeof(lv_color_t));
+    canvas_buf = (lv_color_t*)lv_malloc(GAMEBOY_WIDTH * GAMEBOY_HEIGHT * sizeof(lv_color_t));
 
     if (canvas_buf) {
-        lv_canvas_set_buffer(canvas, canvas_buf, GAMEBOY_WIDTH, GAMEBOY_HEIGHT, LV_IMG_CF_TRUE_COLOR_16);
+        lv_canvas_set_buffer(canvas, canvas_buf, GAMEBOY_WIDTH, GAMEBOY_HEIGHT, LV_COLOR_FORMAT_RGB565);
         lv_obj_center(canvas);
     }
 
@@ -145,7 +222,7 @@ void jolteon_end_frame(void)
         }
 
         if (canvas) {
-            lv_canvas_set_buffer(canvas, canvas_buf, GAMEBOY_WIDTH, GAMEBOY_HEIGHT, LV_IMG_CF_TRUE_COLOR_16);
+            lv_canvas_set_buffer(canvas, canvas_buf, GAMEBOY_WIDTH, GAMEBOY_HEIGHT, LV_COLOR_FORMAT_RGB565);
         }
     }
 }

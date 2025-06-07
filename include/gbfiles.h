@@ -1,6 +1,8 @@
 #ifndef INTERNAL_H
 #define INTERNAL_H
 
+#include <cstdint>
+
 /* Uncomment this to include a fallback ROM */
 // #define USE_INTERNAL_ROM
 
@@ -12,15 +14,15 @@
 #ifdef USE_INTERNAL_ROM
 	#include "gbrom.h"
 #else
-	const uint8_t* gb_rom = nullptr;
-	const uint32_t gb_rom_size = 0;
+	extern const uint8_t* gb_rom;
+	extern const uint32_t gb_rom_size;
 #endif
 
 #ifdef USE_INTERNAL_BIOS
 	#include "gbbios.h"
 #else
-	const uint8_t* gb_bios = nullptr;
-	const uint32_t gb_bios_size = 0;
+	extern const uint8_t* gb_bios;
+	extern const uint32_t gb_bios_size;
 #endif
 
 #ifdef USE_INTERNAL_BORDER
